@@ -3,7 +3,9 @@
 @section('content')
 <div class="container">
     <h1>Bus Schedules</h1>
-    <a href="{{ route('admin.bus_schedule_list_create') }}" class="btn btn-primary mb-3">Add New Schedule</a>
+    <a href="{{ route('admin.bus_schedule_list_create') }}" class="btn btn-primary mb-3">
+        <i class="fas fa-plus"></i> Add New Schedule
+    </a>
     @if($busSchedules->count())
     <table class="table">
         <thead>
@@ -29,10 +31,13 @@
                 <td>{{ $schedule->end_time }}</td>
                 <td>{{ $schedule->status ? 'Active' : 'Inactive' }}</td>
                 <td>
-                    
-                    <a href="{{ route('bus_schedules.edit', $schedule->id) }}" class="btn btn-primary btn-sm">Edit</a>
+                    <a href="{{ route('bus_schedules.edit', $schedule->id) }}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
                     <form action="{{ route('bus_schedules.destroy', $schedule->id) }}" method="get" style="display:inline;">
-                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            <i class="fas fa-trash-alt"></i> Delete
+                        </button>
                     </form>  
                 </td>
             </tr>

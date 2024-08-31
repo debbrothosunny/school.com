@@ -344,7 +344,7 @@
 
             <!-- Bus Schdeule -->
 
-            <!-- <li class="nav-item @if(Request::segment(2) == 'admin.bus_schedule_list') menu-is-opening menu-open @endif">
+            <li class="nav-item @if(Request::segment(2) == 'admin.bus_schedule_list') menu-is-opening menu-open @endif">
 
               <a href="#" class="nav-link @if(Request::segment(2) == 'admin.bus_schedule_list')  active @endif">
                   <i class="nav-icon fas fa-bus"></i> 
@@ -363,7 +363,7 @@
                 </li>
 
               </ul>
-            </li> -->
+            </li>
 
             <!-- Library-->
             <li class="nav-item @if(Request::segment(2) == 'admin.library_list') menu-is-opening menu-open @endif">
