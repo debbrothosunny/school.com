@@ -20,6 +20,7 @@ use App\Http\Controllers\FeesCollection\FeesCollectionController;
 use App\Http\Controllers\BusSchedule\BusScheduleController;
 use App\Http\Controllers\Library\LibraryController;
 use App\Http\Controllers\Chat\ChatController;
+use App\Http\Controllers\Notification\NotificationController;
 
 
 /*resu

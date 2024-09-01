@@ -20,26 +20,30 @@ class ParentController extends Controller
     {
         // Start the query builder for ParentModal
         $query = ParentModal::with('user');
-    
+
         // Apply filters if they are present in the request
-        if (!empty($request->get('search'))) {
-            $query->where(function($q) use ($request) {
-                $q->where('name', 'like', '%' . $request->search . '%')
-                  ->orWhere('address', 'like', '%' . $request->search . '%')
-                  ->orWhere('mobile_number', 'like', '%' . $request->search . '%');
+        if ($search = $request->input('search')) {
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                ->orWhere('address', 'like', '%' . $search . '%')
+                ->orWhere('mobile_number', 'like', '%' . $search . '%');
             });
         }
-    
-        // Paginate the results with 10 records per page
+
+        // Paginate the results with 50 records per page
         $parents = $query->orderBy('created_at', 'desc')->paginate(50);
-    
+
         // Prepare additional data for the view
-        $data['getRecord'] = User::getParent();
-        $data['header_title'] = 'Parent List'; 
-    
+        $data = [
+            'getRecord' => User::getParent(),
+            'header_title' => 'Parent List',
+            'parents' => $parents
+        ];
+
         // Return the view with the paginated parents and additional data
-        return view('admin.parent_list', $data, compact('parents'));
+        return view('admin.parent_list', $data);
     }
+
 
 
     public function parent_list_add()

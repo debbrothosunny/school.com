@@ -16,14 +16,14 @@ use App\Models\AssignClassTeacher;
 use App\Models\ExamSchedule;
 use App\Models\StudentAttendance;
 use App\Models\Setting;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use DB;
 
 class DashboardController extends Controller
 
 {
     public function dashboard()
-    {
+    {  
         $data['header_title'] = 'Dashboard'; 
         
     if (Auth::user()->user_type == 1) {
@@ -68,30 +68,36 @@ class DashboardController extends Controller
         elseif (Auth::user()->user_type == 2) {
 
             $teacher = Auth::user()->teacher;
-
+        
             if (!$teacher) {
                 return redirect()->route('teacher.dashboard')->with('error', 'Teacher not found.');
             }
-
+        
             $teacherId = $teacher->id;
+        
+            // Fetch classes and students count in a single query
+            $teacherClassesAndStudents = AssignClassTeacher::with(['className' => function ($query) {
+                $query->withCount('students');
+            }])
+            ->where('teacher_id', $teacherId)
+            ->get();
+        
+            // Calculate total students and classes
+            $teacherStudents = $teacherClassesAndStudents->sum('className.students_count');
+            $teacherClasses = $teacherClassesAndStudents->count();
+        
 
-            $teacherStudents = AssignClassTeacher::with('className.students')
-                ->where('teacher_id', $teacherId)
-                ->get()
-                ->pluck('className.students')
-                ->flatten()
-                ->count();
-
-            $teacherClasses = AssignClassTeacher::where('teacher_id', $teacherId)
-                ->distinct('class_id')
-                ->count('class_id');
-
-                // Assuming NoticeBoardMessage model has a 'message_to' column
+ 
+        
+            // Fetch notice board count where message is directed to parents (user_type = 4)
             $getRecord = NoticeBoard::whereHas('NoticeBoardMessage', function ($query) {
                 $query->where('message_to', 4); // Assuming 4 is the ID for parents
             })->count();
-            return view('teacher.dashboard', compact( 'teacherClasses','data','teacherStudents','getRecord'));
-        } 
+        
+            return view('teacher.dashboard', compact('teacherClasses', 'teacherStudents', 'getRecord'));
+        }
+    
+     
 
 
         elseif (Auth::user()->user_type == 3) {
